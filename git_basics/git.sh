@@ -21,8 +21,8 @@ git add sqoop
 # committing the changes
 git commit -m "sqoop initial version"
 
-# adding the remote repo
-git remote add origin https://github.com/mohan2see/code.git
+# adding the remote repo. for ssh authenication better to use git url instead of https.
+git remote add origin git@github.com:mohan2see/code.git
 
 # commiting the changes to remote repo. do a pull if you have updated work in remote before doing a push.
 git push origin master
