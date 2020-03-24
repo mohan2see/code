@@ -4,6 +4,21 @@
 # Oracle or a mainframe into the Hadoop Distributed File System (HDFS), transform the data in Hadoop MapReduce, and then export the data back into an RDBMS
 # Sqoop uses MapReduce to import and export the data, which provides parallel operation as well as fault tolerance
 
+# below tutorial has been worked on this dataset in mysql.
+
+CREATE DATABASE hadoop;
+USE hadoop;
+CREATE TABLE `emp` (
+  `id` int(11) DEFAULT NULL,
+  `name` text,
+  `dept` text
+);
+insert into hadoop.emp values (1,"mohan","IT")
+insert into hadoop.emp values (2,"manoj","IT")
+insert into hadoop.emp values (3,"mohanraj","Farming")
+insert into hadoop.emp values (4,NULL,NULL)
+
+
 # ----------------------------------------------------------------
 # sqoop import - a tool to connect to a DB and import data to HDFS
 # ----------------------------------------------------------------
@@ -49,6 +64,7 @@ sqoop import --driver com.microsoft.jdbc.sqlserver.SQLServerDriver \
 # 5) --compress = to enable compression
 # 6) --null-string = string to be written for a null value on string column
 # 7) --null-non-string = string to be written for a null value on non-string column
+# 8) delete-target-dir = delete the directory in hdfs if exists
 
 # -Dorg prop is required when using --split-by. This will create 2 files (because of --num-mappers 2) which is split by values of ROLE_NAME. if num of mappers > distinct(values in split_by_column)...
 # ...the left-over mappers doesn't do any job, yet creates a file with 0 bytes.
@@ -111,3 +127,16 @@ max@max:~$ hadoop fs -cat /user/hive/warehouse/import_test/part-m-00001
 
 
 # formatting the rows written to HDFS.
+# 1) --enclosed-by = specifies the enclosing character for a field
+# 2) --escaped-by = specifies the escape character (if enclosed by character is found in the data, the escaped by character will preceed the enclosed by character)
+# 3) --fields-terminated-by = sets the character for field(delimiter)
+# 4) --lines-terminated-by = sets the end-of-line character
+# 5) --optionally-enclosed-by = encloses the fields only for the fields that contains the delimiter characters.
+
+sqoop import --connect jdbc:mysql://localhost:3306/ --username hive --password max \
+--query "select * from hadoop.emp where \$CONDITIONS " --fields-terminated-by '\t' --enclosed-by '\"' \
+--escaped-by "\\" --lines-terminated-by '\n' --target-dir /user/hive/warehouse/import_test \
+--delete-target-dir --num-mappers 1
+
+# OUTPUT
+"1"	"mohan"	"IT"
