@@ -96,7 +96,7 @@ sqoop import --connect jdbc:mysql://localhost:3306/ --query "select * from hadoo
 sqoop import --connect jdbc:mysql://localhost:3306/ --query "select * from hadoop.emp where \$CONDITIONS" --check-column id \
 --incremental append --last-value 4 --target-dir /user/hive/warehouse/import_test --username hive --password max --append --num-mappers 1
 
-#OUTPUT. similary can perform last modified date strategy and Rows where the check column holds a timestamp more recent than the timestamp specified with --last-value are imported.
+# OUTPUT. similary can perform last modified date strategy and Rows where the check column holds a timestamp more recent than the timestamp specified with --last-value are imported.
 hadoop fs -ls /user/hive/warehouse/import_test
 Found 2 items
 -rw-r--r--   1 max supergroup         53 2020-03-22 21:46 /user/hive/warehouse/import_test/part-m-00000
@@ -108,3 +108,6 @@ max@max:~$ hadoop fs -cat /user/hive/warehouse/import_test/part-m-00000
 4,null,null
 max@max:~$ hadoop fs -cat /user/hive/warehouse/import_test/part-m-00001
 5,chella,IT
+
+
+# formatting the rows written to HDFS.
