@@ -126,7 +126,7 @@ max@max:~$ hadoop fs -cat /user/hive/warehouse/import_test/part-m-00001
 5,chella,IT
 
 
-# formatting the rows written to HDFS.
+# File Formats - formatting the rows written to HDFS.
 # 1) --enclosed-by = specifies the enclosing character for a field
 # 2) --escaped-by = specifies the escape character (if enclosed by character is found in the data, the escaped by character will preceed the enclosed by character)
 # 3) --fields-terminated-by = sets the character for field(delimiter)
