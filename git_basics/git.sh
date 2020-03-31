@@ -26,3 +26,6 @@ git remote add origin git@github.com:mohan2see/code.git
 
 # commiting the changes to remote repo. do a pull if you have updated work in remote before doing a push.
 git push origin master
+
+# testing git pull
+git pull git@github.com:mohan2see/code.git
