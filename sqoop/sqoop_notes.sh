@@ -103,6 +103,7 @@ select * from hadoop.emp;
 |    4 | NULL     | NULL    |
 +------+----------+---------+
 
+
 # running initial import. this imports 4 records.
 sqoop import --connect jdbc:mysql://localhost:3306/ --query "select * from hadoop.emp where \$CONDITIONS" --check-column id \
 --incremental append --last-value 0 --target-dir /user/hive/warehouse/import_test --username hive --password max --num-mappers 1
@@ -131,7 +132,7 @@ max@max:~$ hadoop fs -cat /user/hive/warehouse/import_test/part-m-00001
 # 2) --escaped-by = specifies the escape character (if enclosed by character is found in the data, the escaped by character will preceed the enclosed by character)
 # 3) --fields-terminated-by = sets the character for field(delimiter)
 # 4) --lines-terminated-by = sets the end-of-line character
-# 5) --optionally-enclosed-by = encloses the fields only for the fields that contains the delimiter characters.
+# 5) --optionally-enclosed-by = encloses the fields only for the fields that contains the delimiter characters and escaped characters.
 
 sqoop import --connect jdbc:mysql://localhost:3306/ --username hive --password max \
 --query "select * from hadoop.emp where \$CONDITIONS " --fields-terminated-by '\t' --enclosed-by '\"' \
@@ -140,3 +141,37 @@ sqoop import --connect jdbc:mysql://localhost:3306/ --username hive --password m
 
 # OUTPUT
 "1"	"mohan"	"IT"
+
+
+# Importing data into HIVE
+
+# 1) --hive-import = creates the hive table with the imported data
+# 2) --hive-overwrite = Overwrite existing data in the Hive table.
+# 3) --create-hive-table = If set, then the job will fail if the target hive table exits.
+# 4) --hive-table <table_name> = sets the table name to be created in HIVE
+# 5) --map-column-hive = 	Override default mapping from SQL type to Hive type for configured columns.
+
+# here although target-dir is specified, the data wont be imported to target dir. it will be imported to /user/hive/warehouse/emp_auto_created location.
+sqoop import --connect jdbc:mysql://localhost:3306/ --username hive --password max \
+--query "select * from hadoop.emp where \$CONDITIONS" --target-dir /user/hive/warehouse/import_test \
+--delete-target-dir --hive-import --hive-table emp_auto_created --hive-overwrite --num-mappers 1
+
+# import data + auto create table + set delimiters when import. notice the --hive-table and target-dir table names are different. if same, after the data import,...
+# ...it somehow overwrites the folder with empty data.
+sqoop import --connect jdbc:mysql://localhost:3306/ --username hive --password max \
+--target-dir /user/hive/warehouse/emp1 --num-mappers 1 --query "select * from hadoop.emp where \$CONDITIONS" \
+--as-textfile --fields-terminated-by ',' --lines-terminated-by '\n' --hive-import --hive-overwrite --hive-table emp2 --verbose
+
+# --import-all-tables enables to import all tables in a database.
+
+
+# ---------------------------------------------------------------------------
+# sqoop export - a tool to connect to a DB and export data from HDFS to DB
+# ---------------------------------------------------------------------------
+
+# The table must exist in DB. created a new table in mysql (emp_import).
+# If you specify the --update-key argument, Sqoop will instead modify an existing dataset in the database. Each input record is treated as an UPDATE statement that modifies an existing row. ..
+# ... --update-key can contain multiple columns separated by comma, which will be like an update statement with where conditions.(update table_name set col1=value1 where col2=value2,col3=value3 )
+
+
+sqoop-export --table emp_import --export-dir /user/hive/warehouse/emp_auto_created --connect jdbc:mysql://localhost:3306
