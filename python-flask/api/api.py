@@ -29,17 +29,23 @@ def home_2():
 	if 'id' in request.args:
 		id = int(request.args['id'])
 	print(request.args)
+	author=[]
 	if 'author' in request.args:
 		author = request.args.getlist('author')
-		print(author)
+		
 
 
 	results=[]
 	id_list=[]
 	for book in books:
 		id_list.append(book['id'])
-		for i in author:
-			if book['id'] == id and book['author'] == i:
+
+		if author:
+			for i in author:
+				if book['id'] == id and book['author'] == i:
+					results.append(book)
+		else:
+			if book['id'] == id:
 				results.append(book)
 
 	if id in id_list:
