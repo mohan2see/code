@@ -2,6 +2,7 @@ package Streaming
 import Streaming.Logging.setupLogging
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
+import org.apache.spark.sql.functions.{window, col}
 
 object StructuredStreaming {
 
@@ -30,13 +31,23 @@ object StructuredStreaming {
       .option("maxFilesPerTrigger","1")
       .json("/home/max/Spark-The-Definitive-Guide-master/data/activity-data")
 
-    // performing some transformation
+
+    val withEventTime = streaming.selectExpr("*","cast(cast(Creation_Time as double)/1000000000 as timestamp) as event_time")
+
+    val query = withEventTime.groupBy(window(col("event_time"), "10 minutes")).count()
+      .writeStream
+      .queryName("events_per_window")
+      .format("console")
+      .outputMode("complete")
+      .start()
+
+   // performing some transformation
     val activityCounts = streaming.groupBy("Device").count()
 
     // setting the shuffle to 5 since its local machine.
     spark.conf.set("spark.sql.shuffle.partitions","5")
 
-    // writing the stream to a console
+    /*// writing the stream to a console
     val activityQuery = activityCounts
       .writeStream
       .queryName("activity_counts")
@@ -44,7 +55,9 @@ object StructuredStreaming {
       .outputMode("complete")
       .start()
 
-    activityQuery.awaitTermination()
+    spark.sql("SELECT * FROM events_per_window").show()
+    activityQuery.awaitTermination() */
+     query.awaitTermination()
   }
 
 }
