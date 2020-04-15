@@ -149,7 +149,7 @@ sqoop import --connect jdbc:mysql://localhost:3306/ --username hive --password m
 # 2) --hive-overwrite = Overwrite existing data in the Hive table.
 # 3) --create-hive-table = If set, then the job will fail if the target hive table exits.
 # 4) --hive-table <table_name> = sets the table name to be created in HIVE
-# 5) --map-column-hive = 	Override default mapping from SQL type to Hive type for configured columns.
+# 5) --map-column-hive = Override default mapping from SQL type to Hive type for configured columns.
 
 # here although target-dir is specified, the data wont be imported to target dir. it will be imported to /user/hive/warehouse/emp_auto_created location.
 sqoop import --connect jdbc:mysql://localhost:3306/ --username hive --password max \
