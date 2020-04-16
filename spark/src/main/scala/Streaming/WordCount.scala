@@ -11,7 +11,7 @@ object WordCount {
     setupLogging()
     spark.range(1000).toDF().show()
     val ssc = new StreamingContext(spark.sparkContext, Seconds(10))
-    val lines = ssc.socketTextStream("localhost", 9999)
+    val lines = ssc.socketTextStream("localhost", 8888)
     val words = lines.flatMap(_.split(" "))
     val wordCounts = words.map( x => (x,1)).reduceByKey(_ + _)
     wordCounts.print()
