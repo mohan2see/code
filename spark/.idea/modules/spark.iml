@@ -301,5 +301,24 @@
     <orderEntry type="library" name="sbt: com.carrotsearch:hppc:0.7.1:jar" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="sbt: asm:asm:3.1:jar" level="project" />
     <orderEntry type="library" name="sbt: aopalliance:aopalliance:1.0:jar" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/Downloads/mongo-spark-master.zip!/mongo-spark-master/examples/src/test/java" />
+          <root url="jar://$USER_HOME$/Downloads/mongo-spark-master.zip!/mongo-spark-master/src/test/java" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$USER_HOME$/Downloads/mongo-spark-master/src/main/scala/com" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
