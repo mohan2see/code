@@ -1,56 +1,23 @@
-import flask
-from flask import request, jsonify
+from flask import Flask, render_template
+app = Flask(__name__)
 
-app = flask.Flask(__name__)
-app.config["DEBUG"] = True
-
-books = { "id" : 1, 
-	"author": "Mohan",
-	"name": "Succes"
-       }, {"id" : 1,
-    "author": "Murali",
-	"name": "Successss"
-  }
-
-
-	
-
-@app.route('/api/v1/test', methods=['GET'])
+@app.route("/")
 def home():
-    return "<h1><<<<<<<<<<<<<<<<<<<<<<<<<<<#TESTING#>>>>>>>>>>>>>>>>>>>>>>></p>"
+  return render_template("index.html")
 
-@app.route('/', methods=['GET'])
-def home_1():
-    return "<h1>Distant Reading Archive</h1><p>This site is a prototype API for distant reading of science fiction novels.</p>"
+@app.route("/Mohan")
+def name():
+  return "Hello Mohan."
 
+#rendering the HTML page which has the button
+@app.route('/json')
+def json():
+    return render_template('json.html')
 
-@app.route('/api/v1/test1', methods=['GET'])
-def home_2():
-	if 'id' in request.args:
-		id = int(request.args['id'])
-	print(request.args)
-	author=[]
-	if 'author' in request.args:
-		author = request.args.getlist('author')
-		
+#background process happening without any refreshing
+@app.route('/background_process_test')
+def background_process_test():
+    return render_template("index.html")
 
-
-	results=[]
-	id_list=[]
-	for book in books:
-		id_list.append(book['id'])
-
-		if author:
-			for i in author:
-				if book['id'] == id and book['author'] == i:
-					results.append(book)
-		else:
-			if book['id'] == id:
-				results.append(book)
-
-	if id in id_list:
-		return jsonify(results)
-	else:
-		return "<h1 style='color:blue;'>Resource not Found</h1>"
-
-app.run()
+if __name__ == "__main__":
+  app.run(debug=True)
